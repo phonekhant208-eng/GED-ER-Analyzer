@@ -6,7 +6,7 @@
     <title>RLA Essay Analyzer | BitByBit</title>
     <link rel="stylesheet" href="RLAmainpage.css">
     
-    <!-- 1. Supabase CDN MUST be loaded first in the <head> -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -22,7 +22,7 @@
                 <div class="panel-header">
                     <label for="passage-select">Select Practice Prompt:</label>
                     <select id="passage-select" class="dropdown">
-                        <option value="custom" selected>📝 Custom (Paste your own passages)</option>
+                        <option value="custom" selected> Custom (Paste your own passages)</option>
                         <!-- Dynamic options from Supabase will be injected here automatically -->
                     </select>
                 </div>
@@ -46,7 +46,7 @@
             <div class="panel action-panel">
                 <div id="editor-view" class="editor-container">
                     <textarea id="essay-input" class="main-textarea" placeholder="Type or paste your extended response here..."></textarea>
-                    <button class="btn-primary" id="analyze-btn">🚀 Grade My Extended Response</button>
+                    <button class="btn-primary" id="analyze-btn"> Grade My Extended Response</button>
                 </div>
 
                 <div id="results-view" class="results-container hidden">
@@ -57,7 +57,7 @@
         </section>
     </main>
 
-    <!-- 2. Your custom JS script comes AFTER the Supabase CDN script -->
+
     <script src="RLAmainpage.js"></script>
 </body>
 </html>

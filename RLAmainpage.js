@@ -44,12 +44,12 @@ function updateButtonText() {
     const wordCount = text === "" ? 0 : text.split(/\s+/).length;
 
     if (dropdown.value === 'custom') {
-        analyzeBtn.innerText = '🚀 Grade My Extended Response';
+        analyzeBtn.innerText = ' Grade My Extended Response';
     } else {
         if (wordCount > 100) {
-            analyzeBtn.innerText = '🚀 Check My Extended Response';
+            analyzeBtn.innerText = ' Check My Extended Response';
         } else {
-            analyzeBtn.innerText = '🚀 Start Test';
+            analyzeBtn.innerText = ' Start Test';
         }
     }
 }
