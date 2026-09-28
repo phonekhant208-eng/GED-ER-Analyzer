@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RLA Essay Analyzer | BitByBit</title>
     <link rel="stylesheet" href="RLAmainpage.css">
+    
+    <!-- 1. Supabase CDN MUST be loaded first in the <head> -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <header class="navbar">
@@ -19,26 +22,15 @@
                 <div class="panel-header">
                     <label for="passage-select">Select Practice Prompt:</label>
                     <select id="passage-select" class="dropdown">
-                        <!-- Custom is now the first and default selected option -->
-                        <option value="custom" selected> Custom (Paste your own passages)</option>
-                        <option value="passage1">Passage 1: Extended School Day (Pro vs. Con)</option>
-                        <option value="passage2">Passage 2: Social Media Regulations</option>
+                        <option value="custom" selected>📝 Custom (Paste your own passages)</option>
+                        <!-- Dynamic options from Supabase will be injected here automatically -->
                     </select>
                 </div>
                 
-                <!-- State A: Pre-loaded Reader (Hidden by default now) -->
-                <div id="preloaded-view" class="passage-content scrollable hidden">
-                    <div class="passage-box">
-                        <h3>Passage A (Pro Argument)</h3>
-                        <p>Studies show that extending the school day by just one hour can significantly improve academic retention. Proponents argue that the extra time allows teachers to dive deeper into complex subjects and provides students with supervised environments to complete their homework...</p>
-                    </div>
-                    <div class="passage-box">
-                        <h3>Passage B (Con Argument)</h3>
-                        <p>Opponents of the extended school day argue that longer hours lead to student burnout and severe exhaustion. Furthermore, adding time to the school day drastically reduces the hours children have for extracurricular activities, family time, and independent play...</p>
-                    </div>
-                </div>
+                <!-- State A: Pre-loaded Reader -->
+                <div id="preloaded-view" class="passage-content scrollable hidden"></div>
 
-                <!-- State B: Custom Input (Visible by default now) -->
+                <!-- State B: Custom Input -->
                 <div id="custom-view" class="passage-content">
                     <div class="notice-badge">💡 Optional: Leave blank for grammar & structure evaluation only.</div>
                     
@@ -52,24 +44,20 @@
 
             <!-- RIGHT COLUMN: The Action Panel -->
             <div class="panel action-panel">
-                
-                <!-- View 1: Editor Workspace -->
                 <div id="editor-view" class="editor-container">
                     <textarea id="essay-input" class="main-textarea" placeholder="Type or paste your extended response here..."></textarea>
-                    
-                    <button class="btn-primary" id="analyze-btn"> Grade My Extended Response</button>
+                    <button class="btn-primary" id="analyze-btn">🚀 Grade My Extended Response</button>
                 </div>
 
-                <!-- View 2: Results Dashboard (Hidden for now) -->
                 <div id="results-view" class="results-container hidden">
                     <h2>Analysis Results</h2>
-                    <!-- Result cards will be injected here by JS later -->
                 </div>
             </div>
 
         </section>
     </main>
 
-   <script src="RLAmainpage.js"></script>
+    <!-- 2. Your custom JS script comes AFTER the Supabase CDN script -->
+    <script src="RLAmainpage.js"></script>
 </body>
 </html>
