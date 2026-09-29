@@ -178,17 +178,42 @@ function handleMainAction() {
 }
 
 // 8. Render Selected Passage into Left Panel
+// 8. Render Selected Passage with GED-style Tabs
 function renderPreloadedPassage(data) {
     preloadedView.innerHTML = `
-        <div class="passage-box">
-            <h3>${data.passage_a_title || 'Passage A'}</h3>
+        <div class="passage-tabs">
+            <button type="button" class="tab-btn active" data-target="passage-a-box">
+                ${data.passage_a_title || 'Passage A'}
+            </button>
+            <button type="button" class="tab-btn" data-target="passage-b-box">
+                ${data.passage_b_title || 'Passage B'}
+            </button>
+        </div>
+        <div id="passage-a-box" class="passage-box">
             <p>${data.passage_a_text}</p>
         </div>
-        <div class="passage-box">
-            <h3>${data.passage_b_title || 'Passage B'}</h3>
+        <div id="passage-b-box" class="passage-box hidden">
             <p>${data.passage_b_text}</p>
         </div>
     `;
+
+    // Tab switching listener
+    const tabs = preloadedView.querySelectorAll('.tab-btn');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            const targetId = tab.getAttribute('data-target');
+            if (targetId === 'passage-a-box') {
+                document.getElementById('passage-a-box').classList.remove('hidden');
+                document.getElementById('passage-b-box').classList.add('hidden');
+            } else {
+                document.getElementById('passage-a-box').classList.add('hidden');
+                document.getElementById('passage-b-box').classList.remove('hidden');
+            }
+        });
+    });
 }
 
 // 9. Listen for Dropdown Changes
