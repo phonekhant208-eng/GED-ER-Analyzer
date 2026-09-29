@@ -10,6 +10,8 @@ const preloadedView = document.getElementById('preloaded-view');
 const customView = document.getElementById('custom-view');
 const analyzeBtn = document.getElementById('analyze-btn');
 const essayInput = document.getElementById('essay-input');
+const resultsView = document.getElementById('results-view');
+
 
 // Cache object storing fetched passages
 const passageCache = {};
@@ -140,6 +142,10 @@ async function analyzeEssay() {
         updateButtonText();
     }
 }
+
+
+resultsView.classList.remove('hidden');
+resultsView.scrollIntoView({ behavior: 'smooth' });
 
 // 8. Render Scorecard inside Right Panel matching the 12-point rubric
 function renderResults(data) {
