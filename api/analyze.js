@@ -34,19 +34,42 @@ TRAIT 3: Clarity and Command of Standard English Conventions (0 to 2 raw points 
 - 1 Point: Frequent run-ons/fragments, noticeable mechanics errors, but meaning is clear.
 - 0 Points: Severe, continuous breakdowns obstructing meaning.
 
-You MUST respond ONLY with a valid JSON object strictly adhering to this structure:
+CRITICAL RULES FOR GRADING:
+1. Zero tolerance for personal anecdotes. If the essay uses phrases like "my cousin", "I think", or "in my opinion" instead of analyzing text statistics, Trait 1 MUST be 0 raw points.
+2. If the text has significant lowercase "i" pronouns, lack of punctuation, or run-on sentences, Trait 3 MUST be 0 raw points.
+
+You MUST respond ONLY with a valid JSON object strictly adhering to this structure. Notice that the score is calculated AFTER the analysis:
+
 {
-  "trait1": { "raw": 0, "weighted": 0, "analysis": "2-3 sentences explaining score based on evidence synthesis." },
-  "trait2": { "raw": 0, "weighted": 0, "analysis": "2-3 sentences assessing paragraph usage, flow, and structural transitions." },
-  "trait3": { "raw": 0, "weighted": 0, "analysis": "2-3 sentences highlighting grammar, punctuation, or spelling patterns." },
+  "trait1": { 
+    "analysis": "Provide a 3-sentence deep evaluation of evidence synthesis here FIRST.",
+    "raw": 0, 
+    "weighted": 0 
+  },
+  "trait2": { 
+    "analysis": "Assess paragraph usage, flow, and structural transitions here FIRST.",
+    "raw": 0, 
+    "weighted": 0 
+  },
+  "trait3": { 
+    "analysis": "Highlight grammar, punctuation, or spelling patterns here FIRST.",
+    "raw": 0, 
+    "weighted": 0 
+  },
   "totalRaw": 0,
   "totalWeighted": 0,
   "improvementPlan": [
-    "Punchy, actionable fragment 1",
-    "Punchy, actionable fragment 2",
-    "Punchy, actionable fragment 3"
+    "Actionable fragment 1",
+    "Actionable fragment 2",
+    "Actionable fragment 3"
   ]
 }`;
+
+
+
+
+
+
 
   const userPrompt = `
 MODE: ${mode}
