@@ -6,14 +6,11 @@
     
     --bg-main: #F8FAFC;
     --surface: #FFFFFF;
-    --surface-alt: #F1F5F9;
     
     --text-dark: #2d3748;
     --text-muted: #475569;
-    --text-light: #94A3B8;
     
     --border: #E2E8F0;
-    --border-hover: #CBD5E1;
     
     --warning-bg: #FFFBEB;
     --warning-border: #FDE68A;
@@ -21,17 +18,16 @@
     
     --radius-lg: 16px;
     --radius-md: 10px;
-    --radius-sm: 6px;
     
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 12px -2px rgba(111, 83, 117, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px -2px rgba(111, 83, 117, 0.08);
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 body {
@@ -43,7 +39,7 @@ body {
     flex-direction: column;
 }
 
-/* --- Navigation Navbar --- */
+/* Navbar */
 .navbar {
     background-color: var(--surface);
     padding: 0.85rem 2rem;
@@ -63,27 +59,24 @@ body {
 .logo {
     font-size: 1.25rem;
     font-weight: 800;
-    letter-spacing: -0.02em;
     color: var(--text-dark);
 }
 
 .logo span {
     color: var(--rla-theme);
-    font-weight: 700;
 }
 
 .header-tag {
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
     background: var(--rla-theme-light);
     color: var(--rla-theme-dark);
     padding: 0.35rem 0.75rem;
     border-radius: 99px;
 }
 
-/* --- Layout Container --- */
+/* Layout Container */
 .container {
     max-width: 1440px;
     margin: 1.5rem auto;
@@ -98,7 +91,6 @@ body {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    flex-grow: 1;
     min-height: calc(100vh - 130px);
 }
 
@@ -108,7 +100,7 @@ body {
     }
 }
 
-/* --- Panel Component --- */
+/* Panels */
 .panel {
     background: var(--surface);
     border-radius: var(--radius-lg);
@@ -141,11 +133,8 @@ body {
     border-radius: var(--radius-md);
     font-size: 0.95rem;
     font-weight: 500;
-    color: var(--text-dark);
-    background-color: var(--surface);
     outline: none;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .dropdown:focus {
@@ -162,19 +151,12 @@ body {
     flex-grow: 1;
 }
 
-/* --- EXACT MATCH: Pre-loaded Passage Reader Layout --- */
-#preloaded-view,
-.passage-box {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
+/* Passage Typography (Purple Headings) */
 #preloaded-view h3,
 .passage-box h3 {
     font-size: 1.1rem;
     font-weight: 700;
-    color: var(--rla-theme); /* Distinctive signature purple */
+    color: var(--rla-theme);
     margin-top: 0.5rem;
     margin-bottom: 0.25rem;
 }
@@ -192,24 +174,16 @@ body {
     max-height: calc(100vh - 220px);
 }
 
-/* Custom Webkit Scrollbars */
-.scrollable::-webkit-scrollbar,
-textarea::-webkit-scrollbar {
+/* Scrollbars */
+.scrollable::-webkit-scrollbar, textarea::-webkit-scrollbar {
     width: 6px;
 }
-
-.scrollable::-webkit-scrollbar-track,
-textarea::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.scrollable::-webkit-scrollbar-thumb,
-textarea::-webkit-scrollbar-thumb {
+.scrollable::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb {
     background: #CBD5E1;
     border-radius: 99px;
 }
 
-/* --- Custom Input Styles --- */
+/* Inputs */
 .notice-badge {
     background-color: var(--warning-bg);
     border: 1px solid var(--warning-border);
@@ -217,10 +191,6 @@ textarea::-webkit-scrollbar-thumb {
     padding: 0.85rem 1rem;
     border-radius: var(--radius-md);
     font-size: 0.85rem;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    line-height: 1.4;
 }
 
 .input-group {
@@ -232,7 +202,6 @@ textarea::-webkit-scrollbar-thumb {
 .custom-label {
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--text-dark);
 }
 
 .custom-textarea {
@@ -241,21 +210,12 @@ textarea::-webkit-scrollbar-thumb {
     padding: 0.85rem 1rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    font-size: 0.925rem;
-    color: var(--text-dark);
     background-color: #FAFAFC;
     resize: vertical;
     outline: none;
-    transition: all 0.2s ease;
 }
 
-.custom-textarea:focus {
-    background-color: var(--surface);
-    border-color: var(--rla-theme);
-    box-shadow: 0 0 0 3px rgba(111, 83, 117, 0.12);
-}
-
-/* --- Right Column: Editor & Action Panel --- */
+/* Editor Right Column */
 .editor-container {
     display: flex;
     flex-direction: column;
@@ -273,20 +233,18 @@ textarea::-webkit-scrollbar-thumb {
     border-radius: var(--radius-md);
     resize: none;
     font-size: 1rem;
-    line-height: 1.7;
-    color: var(--text-dark);
     background-color: #FAFAFC;
     outline: none;
-    transition: all 0.2s ease;
 }
 
+.custom-textarea:focus,
 .main-textarea:focus {
     background-color: var(--surface);
     border-color: var(--rla-theme);
     box-shadow: 0 0 0 3px rgba(111, 83, 117, 0.15);
 }
 
-/* Primary Button */
+/* Button */
 .btn-primary {
     background-color: var(--rla-theme);
     color: white;
@@ -296,33 +254,19 @@ textarea::-webkit-scrollbar-thumb {
     font-weight: 700;
     border-radius: var(--radius-md);
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(111, 83, 117, 0.2);
-    transition: all 0.2s ease;
     width: 100%;
+    transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
     background-color: var(--rla-accent);
-    transform: translateY(-1px);
 }
 
-.btn-primary:active {
-    transform: translateY(1px);
-}
-
-.btn-primary:disabled {
-    background-color: #CBD5E1;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-/* Utility Classes */
 .hidden {
     display: none !important;
 }
 
-/* Full-Width Bottom Results Panel */
+/* FULL WIDTH RESULTS BOTTOM PANEL */
 .results-panel {
     margin-top: 2rem;
     padding: 2rem;
@@ -336,13 +280,6 @@ textarea::-webkit-scrollbar-thumb {
     width: 100%;
 }
 
-/* Ensure inner dynamic AI cards have generous breathing room */
-.results-panel h2, 
-.results-panel h3 {
-    color: var(--text-dark);
-}
-
-/* Trait Breakdown Cards inside Full Width Container */
 .trait-card {
     background: #FAFAFC;
     border: 1px solid var(--border);
@@ -356,35 +293,10 @@ textarea::-webkit-scrollbar-thumb {
     font-size: 1rem;
     color: var(--rla-theme);
     margin-bottom: 0.5rem;
-    display: flex;
-    justify-content: space-between;
 }
 
 .trait-desc {
     color: var(--text-dark);
     font-size: 0.95rem;
-    line-height: 1.6;
-}
-
-/* Bulleted Improvement Plan Callout */
-.improvement-box {
-    background-color: #FEF2F2;
-    border: 1px solid #FCA5A5;
-    border-radius: var(--radius-md);
-    padding: 1.25rem 1.5rem;
-    margin-top: 1rem;
-}
-
-.improvement-box h4 {
-    color: #991B1B;
-    font-size: 0.95rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.improvement-box ul {
-    padding-left: 1.25rem;
-    color: #7F1D1D;
-    font-size: 0.9rem;
     line-height: 1.6;
 }
