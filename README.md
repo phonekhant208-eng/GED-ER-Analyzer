@@ -31,4 +31,4 @@ All core application architecture, UI layout, Supabase schema configuration, and
 ## Local Setup Instructions
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/YOUR_USERNAME/GED-ER-Analyzer.git](https://github.com/YOUR_USERNAME/GED-ER-Analyzer.git)
+   git clone https://github.com/phonekhan1208-eng/GED-ER-Analyzer.git
