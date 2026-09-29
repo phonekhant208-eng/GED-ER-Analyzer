@@ -11,10 +11,44 @@ const customView = document.getElementById('custom-view');
 const analyzeBtn = document.getElementById('analyze-btn');
 const essayInput = document.getElementById('essay-input');
 const resultsView = document.getElementById('results-view');
-
+const timerDisplay = document.getElementById('test-timer'); // Added for timer
 
 // Cache object storing fetched passages
 const passageCache = {};
+
+// --- Timer & Test State ---
+let testActive = false;
+let timerInterval = null;
+let timeRemaining = 2700; // 45 minutes in seconds
+let isOvertime = false;
+
+// --- Modal System ---
+const modalOverlay = document.getElementById('custom-modal');
+const modalTitle = document.getElementById('modal-title');
+const modalText = document.getElementById('modal-text');
+const modalButtons = document.getElementById('modal-buttons');
+
+function showModal(title, text, buttons) {
+    modalTitle.textContent = title;
+    modalText.textContent = text;
+    modalButtons.innerHTML = ''; // Clear old buttons
+
+    buttons.forEach(btnInfo => {
+        const btn = document.createElement('button');
+        btn.textContent = btnInfo.text;
+        btn.className = btnInfo.class;
+        btn.onclick = () => {
+            btnInfo.onClick();
+        };
+        modalButtons.appendChild(btn);
+    });
+
+    modalOverlay.classList.remove('hidden');
+}
+
+function closeModal() {
+    modalOverlay.classList.add('hidden');
+}
 
 // 3. Populate Dropdown dynamically from Supabase
 async function initPassageDropdown() {
@@ -27,12 +61,8 @@ async function initPassageDropdown() {
         return;
     }
 
-    // Loop through every record in the table
     data.forEach(item => {
-        // Prime the cache so switching is instantaneous
         passageCache[item.slug] = item;
-
-        // Create and append a new <option> for each database record
         const option = document.createElement('option');
         option.value = item.slug;
         option.textContent = item.title || `Passage: ${item.slug}`;
@@ -40,23 +70,114 @@ async function initPassageDropdown() {
     });
 }
 
-// 4. Update Button Label based on Word Count and Mode
+// 4. Check for Source Texts (Helper function)
+function getHasSourceTexts() {
+    if (dropdown.value !== 'custom') return true;
+    const textareas = customView.querySelectorAll('textarea');
+    return textareas[0].value.trim().length > 0 || textareas[1].value.trim().length > 0;
+}
+
+// 5. Update Button Label based on Word Count and Mode
 function updateButtonText() {
+    if (testActive) return; // Don't change text while test is running
+
     const text = essayInput.value.trim();
     const wordCount = text === "" ? 0 : text.split(/\s+/).length;
 
-    if (dropdown.value === 'custom') {
-        analyzeBtn.innerText = ' Grade My Extended Response';
+    if (wordCount >= 100) {
+        analyzeBtn.innerText = 'Analyze My Extended Response';
     } else {
-        if (wordCount > 100) {
-            analyzeBtn.innerText = ' Check My Extended Response';
+        analyzeBtn.innerText = 'Start Test';
+    }
+}
+
+// 6. Timer Logic
+function updateTimerUI(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    timerDisplay.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+function startTestTimer() {
+    testActive = true;
+    timeRemaining = 2700;
+    isOvertime = false;
+    timerDisplay.classList.remove('hidden', 'overtime');
+    analyzeBtn.innerText = 'Submit & Finish';
+    
+    updateTimerUI(timeRemaining);
+    
+    timerInterval = setInterval(() => {
+        if (!isOvertime) {
+            timeRemaining--;
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                triggerTimeUpModal();
+            } else {
+                updateTimerUI(timeRemaining);
+            }
         } else {
-            analyzeBtn.innerText = ' Start Test';
+            timeRemaining++; // Counting up in overtime
+            updateTimerUI(timeRemaining);
+        }
+    }, 1000);
+}
+
+function triggerTimeUpModal() {
+    showModal(
+        "Time is Up!", 
+        "Your 45 minutes have expired. Submit now, or continue writing to see how much extra time you need?", 
+        [
+            { text: "Submit Now", class: "btn-primary", onClick: () => { closeModal(); analyzeEssay(); } },
+            { text: "Continue Writing", class: "btn-secondary", onClick: () => { 
+                closeModal(); 
+                isOvertime = true; 
+                timeRemaining = 0; 
+                timerDisplay.classList.add('overtime');
+                timerInterval = setInterval(() => {
+                    timeRemaining++;
+                    updateTimerUI(timeRemaining);
+                }, 1000);
+            }}
+        ]
+    );
+}
+
+// 7. Handle Main Action Button Click
+function handleMainAction() {
+    if (testActive) {
+        analyzeEssay(); // If test is running, clicking submits it
+        return;
+    }
+
+    const text = essayInput.value.trim();
+    const wordCount = text === "" ? 0 : text.split(/\s+/).length;
+    const hasSource = getHasSourceTexts();
+    const isCustom = dropdown.value === 'custom';
+
+    if (wordCount >= 100) {
+        // QUICK ANALYZE MODE
+        if (isCustom && !hasSource) {
+            showModal("Missing Source Texts", "To get accurate feedback and rubric suggestions, you should provide source texts. Are you sure you want to grade this without them?", [
+                { text: "Cancel", class: "btn-secondary", onClick: closeModal },
+                { text: "Yes, Analyze Anyway", class: "btn-primary", onClick: () => { closeModal(); analyzeEssay(); } }
+            ]);
+        } else {
+            analyzeEssay();
+        }
+    } else {
+        // START TEST MODE
+        if (isCustom && !hasSource) {
+            showModal("Missing Practice Text", "You must either select a pre-loaded prompt or paste your own source texts before starting the 45-minute practice test.", [
+                { text: "Okay", class: "btn-primary", onClick: closeModal }
+            ]);
+        } else {
+            startTestTimer();
         }
     }
 }
 
-// 5. Render Selected Passage into Left Panel
+// 8. Render Selected Passage into Left Panel
 function renderPreloadedPassage(data) {
     preloadedView.innerHTML = `
         <div class="passage-box">
@@ -70,7 +191,7 @@ function renderPreloadedPassage(data) {
     `;
 }
 
-// 6. Listen for Dropdown Changes
+// 9. Listen for Dropdown Changes
 dropdown.addEventListener('change', (e) => {
     const selectedSlug = e.target.value;
 
@@ -81,7 +202,6 @@ dropdown.addEventListener('change', (e) => {
         customView.classList.add('hidden');
         preloadedView.classList.remove('hidden');
 
-        // Display passage from cache
         if (passageCache[selectedSlug]) {
             renderPreloadedPassage(passageCache[selectedSlug]);
         }
@@ -90,12 +210,38 @@ dropdown.addEventListener('change', (e) => {
     updateButtonText(); 
 });
 
-// 7. Send Essay to Groq Serverless Endpoint (/api/analyze)
+// 10. Toolbar Commands (Cut, Copy, Paste, Undo, Redo)
+document.querySelectorAll('.tool-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const cmd = btn.getAttribute('data-cmd');
+        essayInput.focus();
+        
+        if (cmd === 'paste') {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.execCommand('insertText', false, text);
+            } catch (err) {
+                showModal("Paste Blocked", "Your browser blocked clipboard access. Please use Ctrl+V or Right-Click -> Paste.", [{ text: "Got it", class: "btn-primary", onClick: closeModal }]);
+            }
+        } else {
+            document.execCommand(cmd);
+        }
+    });
+});
+
+// 11. Send Essay to Serverless Endpoint (/api/analyze)
 async function analyzeEssay() {
     const essayText = essayInput.value.trim();
     if (!essayText) {
-        alert("Please enter your essay before grading.");
+        showModal("Empty Essay", "Please enter your essay before grading.", [{ text: "Okay", class: "btn-primary", onClick: closeModal }]);
         return;
+    }
+
+    // Stop timer if running
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerDisplay.classList.add('hidden');
+        testActive = false;
     }
 
     const selectedMode = dropdown.value;
@@ -136,22 +282,15 @@ async function analyzeEssay() {
         renderResults(data);
     } catch (err) {
         console.error(err);
-        alert(`Analysis Error: ${err.message}`);
+        showModal("Analysis Error", err.message, [{ text: "Okay", class: "btn-primary", onClick: closeModal }]);
     } finally {
         analyzeBtn.disabled = false;
         updateButtonText();
     }
 }
 
-
-resultsView.classList.remove('hidden');
-resultsView.scrollIntoView({ behavior: 'smooth' });
-
-// 8. Render Scorecard inside Right Panel matching the 12-point rubric
+// 12. Render Scorecard inside Full-Width Panel
 function renderResults(data) {
-    const resultsView = document.getElementById('results-view'); // Ensure we select it
-    resultsView.classList.remove('hidden');
-    
     resultsView.innerHTML = `
         <h2 style="color: var(--rla-theme); margin-bottom: 1rem;">📊 Official GED Score Summary</h2>
         <div style="font-size: 1.4rem; font-weight: 800; margin-bottom: 1.5rem; background: #f0ebf2; padding: 1rem; border-radius: 8px; text-align: center;">
@@ -173,17 +312,18 @@ function renderResults(data) {
         <button id="reset-btn" class="btn-primary" style="margin-top: 2rem; background-color: #718096; width: 100%;">✏️ Edit Essay & Try Again</button>
     `;
 
+    // Unhide panel and scroll to it ONLY when results are ready
+    resultsView.classList.remove('hidden');
+    resultsView.scrollIntoView({ behavior: 'smooth' });
+
     document.getElementById('reset-btn').addEventListener('click', () => {
         resultsView.classList.add('hidden');
     });
 }
 
-// 9. Attach Click Listener to Grade Button (THIS IS WHAT TRIGGERS EVERYTHING)
-analyzeBtn.addEventListener('click', analyzeEssay);
-
-
-// 7. Listen for Essay Input
+// 13. Event Listeners
+// IMPORTANT: Replaced direct analyzeEssay with handleMainAction
+analyzeBtn.addEventListener('click', handleMainAction);
 essayInput.addEventListener('input', updateButtonText);
 
-// 8. Run initialization on page load
 initPassageDropdown();
