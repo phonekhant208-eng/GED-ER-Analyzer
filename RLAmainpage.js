@@ -288,7 +288,7 @@ async function analyzeEssay() {
 
     // Set Loading UI State
     analyzeBtn.disabled = true;
-    analyzeBtn.innerText = "⏳ Grading with Official GED Rubric...";
+    analyzeBtn.innerText = " Grading with Official GED Rubric...";
 
     try {
         const response = await fetch('/api/analyze', {
@@ -321,7 +321,7 @@ async function analyzeEssay() {
 // 12. Render Scorecard inside Full-Width Panel
 function renderResults(data) {
     resultsView.innerHTML = `
-        <h2 style="color: var(--rla-theme); margin-bottom: 1rem;"> Official GED Score Summary</h2>
+        <h2 style="color: var(--rla-theme); margin-bottom: 1rem;"> Score Summary</h2>
         <div style="font-size: 1.4rem; font-weight: 800; margin-bottom: 1.5rem; background: #f0ebf2; padding: 1rem; border-radius: 8px; text-align: center;">
             Total Cumulative Score: ${data.totalWeighted} / 12 Points (Raw: ${data.totalRaw}/6)
         </div>
