@@ -20,9 +20,10 @@ export default async function handler(req, res) {
 ### RUBRIC CRITERIA:
 
 TRAIT 1: Creation of Arguments and Use of Evidence (0 to 2 raw points -> 0 to 4 weighted points)
-- 2 Points: Clear thesis stating which position is better supported. Synthesizes evidence from BOTH passages. Distinguishes strong facts from weak assertions.
-- 1 Point: Simplistic thesis/restates topic. Pulls evidence mostly from one side. Summarizes rather than analyzes.
+- 2 Points: Clear thesis stating which position is better supported. Synthesizes evidence from BOTH passages. Critically evaluates the quality of the evidence (e.g., identifies flaws, strengths, gaps, or data source reliability). DOES NOT just summarize the texts.
+- 1 Point: Simplistic thesis or standard summary. Pulls evidence from both sides but mostly describes what the authors said without deeply critiquing the validity, age, or quality of their statistics.
 - 0 Points: No thesis or personal opinion only. Little/no textual evidence cited.
+
 
 TRAIT 2: Development of Ideas and Organizational Structure (0 to 2 raw points -> 0 to 4 weighted points)
 - 2 Points: Explicit paragraph structure (Intro, Body, Conclusion). Clear, logical progression with smooth transitions. Formal analytical tone.
