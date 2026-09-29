@@ -24,7 +24,6 @@ TRAIT 1: Creation of Arguments and Use of Evidence (0 to 2 raw points -> 0 to 4 
 - 1 Point: Simplistic thesis or standard summary. Pulls evidence from both sides but mostly describes what the authors said without deeply critiquing the validity, age, or quality of their statistics.
 - 0 Points: No thesis or personal opinion only. Little/no textual evidence cited.
 
-
 TRAIT 2: Development of Ideas and Organizational Structure (0 to 2 raw points -> 0 to 4 weighted points)
 - 2 Points: Explicit paragraph structure (Intro, Body, Conclusion). Clear, logical progression with smooth transitions. Formal analytical tone.
 - 1 Point: Weak organization, inconsistent flow, repetitive transitions, or drifts into personal anecdotes.
@@ -36,27 +35,30 @@ TRAIT 3: Clarity and Command of Standard English Conventions (0 to 2 raw points 
 - 0 Points: Severe, continuous breakdowns obstructing meaning.
 
 CRITICAL RULES FOR GRADING:
-1. Zero tolerance for personal anecdotes. If the essay uses phrases like "my cousin", "I think", or "in my opinion" instead of analyzing text statistics, Trait 1 MUST be 0 raw points.
-2. If the text has significant lowercase "i" pronouns, lack of punctuation, or run-on sentences, Trait 3 MUST be 0 raw points.
-3. To earn 2 raw points for Trait 1, the essay MUST explicitly evaluate advanced text elements, such as pointing out that Pendergast's survey is outdated (from 2012), questioning the background of the researchers, or directly analyzing specific logical fallacies. If the essay just contrasts the arguments and identifies basic bias/statistics without deep data scrutiny, it is a summary-analysis hybrid and MUST be capped at 1 raw point for Trait 1.
-4. If an essay uses weak or overly simplistic transition words (such as starting sentences with "And", "Also", "But", "So"), uses an informal vocabulary (e.g., "scary", "bad guys", "mean text messages"), or leaves out necessary hyphens (e.g., "ten year olds"), you MUST cap both Trait 2 and Trait 3 to a maximum of 1 raw point each.
+1. SOURCE TEXT CHECK: 
+   - If source passages ARE provided (default prompts or user-pasted custom passages), you MUST analyze them FIRST in the "sourcePassageAnalysis" field before grading.
+   - If source passages ARE NOT provided (left blank/empty), set "sourcePassageAnalysis" to state that no passages were provided. Evaluate the essay strictly on structure, argument logic, and conventions. Automatically cap Trait 1 at a maximum of 1 raw point since text synthesis cannot be measured.
+2. Zero tolerance for personal anecdotes. If the essay uses phrases like "my cousin", "I think", or "in my opinion" instead of analyzing text statistics, Trait 1 MUST be 0 raw points.
+3. If the text has significant lowercase "i" pronouns, lack of punctuation, or run-on sentences, Trait 3 MUST be 0 raw points.
+4. To earn 2 raw points for Trait 1, the essay MUST explicitly evaluate advanced text elements, such as pointing out that Pendergast's survey is outdated (from 2012), questioning the background of the researchers, or directly analyzing specific logical fallacies. If the essay just contrasts the arguments and identifies basic bias/statistics without deep data scrutiny, it is a summary-analysis hybrid and MUST be capped at 1 raw point for Trait 1.
+5. If an essay uses weak or overly simplistic transition words (such as starting sentences with "And", "Also", "But", "So"), uses an informal vocabulary (e.g., "scary", "bad guys", "mean text messages"), or leaves out necessary hyphens (e.g., "ten year olds"), you MUST cap both Trait 2 and Trait 3 to a maximum of 1 raw point each.
 
-
-You MUST respond ONLY with a valid JSON object strictly adhering to this structure. Notice that the score is calculated AFTER the analysis:
+You MUST respond ONLY with a valid JSON object strictly adhering to this structure:
 
 {
+  "sourcePassageAnalysis": "FIRST: If passages are present, summarize key claims, statistics, and flaws in Passage A and Passage B here. If passages are missing/blank, write 'No source passages provided; evaluating essay for structure and writing mechanics only.'",
   "trait1": { 
-    "analysis": "Provide a 3-sentence deep evaluation of evidence synthesis here FIRST.",
+    "analysis": "Provide a 3-sentence deep evaluation of evidence synthesis here.",
     "raw": 0, 
     "weighted": 0 
   },
   "trait2": { 
-    "analysis": "Assess paragraph usage, flow, and structural transitions here FIRST.",
+    "analysis": "Assess paragraph usage, flow, and structural transitions here.",
     "raw": 0, 
     "weighted": 0 
   },
   "trait3": { 
-    "analysis": "Highlight grammar, punctuation, or spelling patterns here FIRST.",
+    "analysis": "Highlight grammar, punctuation, or spelling patterns here.",
     "raw": 0, 
     "weighted": 0 
   },
@@ -74,11 +76,10 @@ You MUST respond ONLY with a valid JSON object strictly adhering to this structu
 
 
 
-
-  const userPrompt = `
-MODE: ${mode}
-PASSAGE A: ${passageA || 'N/A (Grammar/Structure Evaluation Only)'}
-PASSAGE B: ${passageB || 'N/A (Grammar/Structure Evaluation Only)'}
+const userPrompt = `
+MODE: ${mode || 'Standard Grading'}
+PASSAGE A: ${passageA && passageA.trim() !== '' ? passageA : 'N/A (Grammar/Structure Evaluation Only)'}
+PASSAGE B: ${passageB && passageB.trim() !== '' ? passageB : 'N/A (Grammar/Structure Evaluation Only)'}
 
 STUDENT ESSAY:
 ${essayText}
