@@ -1,5 +1,5 @@
 // 1. Initialize Supabase Client
-const SUPABASE_URL = "https://mibyte.site";
+const SUPABASE_URL = "[https://mibyte.site](https://mibyte.site)";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5enN5bWVkZWttZWtnb3N5a2lrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzNTM3MTksImV4cCI6MjA5OTkyOTcxOX0.H7cgkvW2gCIX2DiNePoU8hImQI8k6Fo2NK148uC5pPU";
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -22,7 +22,7 @@ let timerInterval = null;
 let timeRemaining = 2700; // 45 minutes in seconds
 let isOvertime = false;
 
-//  Modal System 
+// --- Modal System ---
 const modalOverlay = document.getElementById('custom-modal');
 const modalTitle = document.getElementById('modal-title');
 const modalText = document.getElementById('modal-text');
@@ -177,43 +177,18 @@ function handleMainAction() {
     }
 }
 
-
-// 8. Render Selected Passage with GED-style Tabs
+// 8. Render Selected Passage into Left Panel
 function renderPreloadedPassage(data) {
     preloadedView.innerHTML = `
-        <div class="passage-tabs">
-            <button type="button" class="tab-btn active" data-target="passage-a-box">
-                ${data.passage_a_title || 'Passage A'}
-            </button>
-            <button type="button" class="tab-btn" data-target="passage-b-box">
-                ${data.passage_b_title || 'Passage B'}
-            </button>
-        </div>
-        <div id="passage-a-box" class="passage-box">
+        <div class="passage-box">
+            <h3>${data.passage_a_title || 'Passage A'}</h3>
             <p>${data.passage_a_text}</p>
         </div>
-        <div id="passage-b-box" class="passage-box hidden">
+        <div class="passage-box">
+            <h3>${data.passage_b_title || 'Passage B'}</h3>
             <p>${data.passage_b_text}</p>
         </div>
     `;
-
-    // Tab switching listener
-    const tabs = preloadedView.querySelectorAll('.tab-btn');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-
-            const targetId = tab.getAttribute('data-target');
-            if (targetId === 'passage-a-box') {
-                document.getElementById('passage-a-box').classList.remove('hidden');
-                document.getElementById('passage-b-box').classList.add('hidden');
-            } else {
-                document.getElementById('passage-a-box').classList.add('hidden');
-                document.getElementById('passage-b-box').classList.remove('hidden');
-            }
-        });
-    });
 }
 
 // 9. Listen for Dropdown Changes
@@ -347,16 +322,8 @@ function renderResults(data) {
 }
 
 // 13. Event Listeners
-
+// IMPORTANT: Replaced direct analyzeEssay with handleMainAction
 analyzeBtn.addEventListener('click', handleMainAction);
 essayInput.addEventListener('input', updateButtonText);
-
-//stop reloading in a test
-window.addEventListener('beforeunload', (e) => {
-    if (testActive) {
-        e.preventDefault();
-        e.returnValue = ''; 
-    }
-});
 
 initPassageDropdown();
