@@ -11,7 +11,7 @@ const customView = document.getElementById('custom-view');
 const analyzeBtn = document.getElementById('analyze-btn');
 const essayInput = document.getElementById('essay-input');
 const resultsView = document.getElementById('results-view');
-const timerDisplay = document.getElementById('test-timer'); // Added for timer
+const timerDisplay = document.getElementById('test-timer');
 
 // Cache object storing fetched passages
 const passageCache = {};
@@ -22,7 +22,7 @@ let timerInterval = null;
 let timeRemaining = 2700; // 45 minutes in seconds
 let isOvertime = false;
 
-//  Modal System 
+// Modal System 
 const modalOverlay = document.getElementById('custom-modal');
 const modalTitle = document.getElementById('modal-title');
 const modalText = document.getElementById('modal-text');
@@ -70,11 +70,16 @@ async function initPassageDropdown() {
     });
 }
 
-// 4. Check for Source Texts (Helper function)
+// 4. Check for Source Texts (Requires BOTH Passage A and B to be filled for Custom mode)
 function getHasSourceTexts() {
     if (dropdown.value !== 'custom') return true;
     const textareas = customView.querySelectorAll('textarea');
-    return textareas[0].value.trim().length > 0 || textareas[1].value.trim().length > 0;
+    if (textareas.length < 2) return false;
+
+    const textA = textareas[0]?.value.trim() || '';
+    const textB = textareas[1]?.value.trim() || '';
+
+    return textA.length > 0 && textB.length > 0;
 }
 
 // 5. Update Button Label based on Word Count and Mode
@@ -158,7 +163,7 @@ function handleMainAction() {
     if (wordCount >= 100) {
         // QUICK ANALYZE MODE
         if (isCustom && !hasSource) {
-            showModal("Missing Source Texts", "To get accurate feedback and rubric suggestions, you should provide source texts. Are you sure you want to grade this without them?", [
+            showModal("Missing Source Texts", "To get accurate feedback and rubric suggestions, you must provide text for BOTH Passage A and Passage B.", [
                 { text: "Cancel", class: "btn-secondary", onClick: closeModal },
                 { text: "Yes, Analyze Anyway", class: "btn-primary", onClick: () => { closeModal(); analyzeEssay(); } }
             ]);
@@ -168,7 +173,7 @@ function handleMainAction() {
     } else {
         // START TEST MODE
         if (isCustom && !hasSource) {
-            showModal("Missing Practice Text", "You must either select a pre-loaded prompt or paste your own source texts before starting the 45-minute practice test.", [
+            showModal("Missing Practice Text", "You must enter text for BOTH Passage A and Passage B before starting the 45-minute practice test.", [
                 { text: "Okay", class: "btn-primary", onClick: closeModal }
             ]);
         } else {
@@ -177,16 +182,15 @@ function handleMainAction() {
     }
 }
 
-
 // 8. Render Selected Passage with GED-style Tabs
 function renderPreloadedPassage(data) {
     preloadedView.innerHTML = `
         <div class="passage-tabs">
             <button type="button" class="tab-btn active" data-target="passage-a-box">
-                ${data.passage_a_title || 'Passage A'}
+                Passage A
             </button>
             <button type="button" class="tab-btn" data-target="passage-b-box">
-                ${data.passage_b_title || 'Passage B'}
+                Passage B
             </button>
         </div>
         <div id="passage-a-box" class="passage-box">
@@ -337,7 +341,6 @@ function renderResults(data) {
         <button id="reset-btn" class="btn-primary" style="margin-top: 2rem; background-color: #718096; width: 100%;">✏️ Edit Essay & Try Again</button>
     `;
 
-    // Unhide panel and scroll to it ONLY when results are ready
     resultsView.classList.remove('hidden');
     resultsView.scrollIntoView({ behavior: 'smooth' });
 
@@ -347,11 +350,10 @@ function renderResults(data) {
 }
 
 // 13. Event Listeners
-
 analyzeBtn.addEventListener('click', handleMainAction);
 essayInput.addEventListener('input', updateButtonText);
 
-//stop reloading in a test
+// Stop reloading in an active test
 window.addEventListener('beforeunload', (e) => {
     if (testActive) {
         e.preventDefault();
