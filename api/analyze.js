@@ -38,6 +38,8 @@ TRAIT 3: Clarity and Command of Standard English Conventions (0 to 2 raw points 
 CRITICAL RULES FOR GRADING:
 1. Zero tolerance for personal anecdotes. If the essay uses phrases like "my cousin", "I think", or "in my opinion" instead of analyzing text statistics, Trait 1 MUST be 0 raw points.
 2. If the text has significant lowercase "i" pronouns, lack of punctuation, or run-on sentences, Trait 3 MUST be 0 raw points.
+3. To earn 2 raw points for Trait 1, the essay MUST explicitly evaluate advanced text elements, such as pointing out that Pendergast's survey is outdated (from 2012), questioning the background of the researchers, or directly analyzing specific logical fallacies. If the essay just contrasts the arguments and identifies basic bias/statistics without deep data scrutiny, it is a summary-analysis hybrid and MUST be capped at 1 raw point for Trait 1.
+
 
 You MUST respond ONLY with a valid JSON object strictly adhering to this structure. Notice that the score is calculated AFTER the analysis:
 
