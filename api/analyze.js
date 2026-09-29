@@ -84,7 +84,7 @@ ${essayText}
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gpt-oss-120b', 
+        model: 'openai/gpt-oss-120b', 
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
