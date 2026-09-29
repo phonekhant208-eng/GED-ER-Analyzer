@@ -22,7 +22,7 @@ let timerInterval = null;
 let timeRemaining = 2700; // 45 minutes in seconds
 let isOvertime = false;
 
-// --- Modal System ---
+//  Modal System 
 const modalOverlay = document.getElementById('custom-modal');
 const modalTitle = document.getElementById('modal-title');
 const modalText = document.getElementById('modal-text');
@@ -322,8 +322,16 @@ function renderResults(data) {
 }
 
 // 13. Event Listeners
-// IMPORTANT: Replaced direct analyzeEssay with handleMainAction
+
 analyzeBtn.addEventListener('click', handleMainAction);
 essayInput.addEventListener('input', updateButtonText);
+
+//stop reloading in a test
+window.addEventListener('beforeunload', (e) => {
+    if (testActive) {
+        e.preventDefault();
+        e.returnValue = ''; 
+    }
+});
 
 initPassageDropdown();
