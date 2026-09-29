@@ -4,59 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RLA Essay Analyzer | BitByBit</title>
-    <link rel="stylesheet" href="RLAmainpage.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-
+    <link rel="stylesheet" href="RLAmainpage.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <header class="navbar">
-        <div class="logo">BitByBit <span>RLA</span></div>
+        <div class="logo-container">
+            
+            <div class="logo">BitByBit <span>RLA Analyzer</span></div>
+        </div>
+        <div class="header-tag">GED Extended Response AI</div>
     </header>
 
     <main class="container">
         <section class="workspace">
             
-            <!-- LEFT COLUMN: The Source Panel -->
-            <div class="panel source-panel">
-                <div class="panel-header">
-                    <label for="passage-select">Select Practice Prompt:</label>
-                    <select id="passage-select" class="dropdown">
-                        <option value="custom" selected> Custom (Paste your own passages)</option>
-                        <!-- Dynamic options from Supabase will be injected here automatically -->
-                    </select>
-                </div>
-                
-                <!-- State A: Pre-loaded Reader -->
-                <div id="preloaded-view" class="passage-content scrollable hidden"></div>
+            <!-- LEFT COLUMN: Source Panel -->
+           <div class="panel source-panel">
+    <div class="panel-header">
+        <label for="passage-select" class="section-label">Select Practice Prompt:</label>
+        <select id="passage-select" class="dropdown">
+            <option value="custom" selected>Custom (Paste your own passages)</option>
+            <!-- Dynamic options from Supabase will be injected here -->
+        </select>
+    </div>
+    
+    <!-- State A: Pre-loaded Reader -->
+    <div id="preloaded-view" class="passage-content scrollable hidden"></div>
 
-                <!-- State B: Custom Input -->
-                <div id="custom-view" class="passage-content">
-                    <div class="notice-badge">💡 Optional: Leave blank for grammar & structure evaluation only.</div>
-                    
-                    <label class="custom-label">Passage A Text</label>
-                    <textarea class="custom-textarea" placeholder="Paste the first source text here..."></textarea>
-                    
-                    <label class="custom-label">Passage B Text</label>
-                    <textarea class="custom-textarea" placeholder="Paste the opposing source text here..."></textarea>
-                </div>
-            </div>
+    <!-- State B: Custom Input -->
+    <div id="custom-view" class="passage-content">
+        <div class="notice-badge">💡 Optional: Leave blank for grammar & structure evaluation only.</div>
+        
+        <div class="input-group">
+            <label class="custom-label">Passage A Text</label>
+            <textarea class="custom-textarea" placeholder="Paste the first source text here..."></textarea>
+        </div>
+        
+        <div class="input-group">
+            <label class="custom-label">Passage B Text</label>
+            <textarea class="custom-textarea" placeholder="Paste the opposing source text here..."></textarea>
+        </div>
+    </div>
+</div>
 
-            <!-- RIGHT COLUMN: The Action Panel -->
+            <!-- RIGHT COLUMN: Action & Results Panel -->
             <div class="panel action-panel">
+                
+                <!-- Editor View -->
                 <div id="editor-view" class="editor-container">
-                    <textarea id="essay-input" class="main-textarea" placeholder="Type or paste your extended response here..."></textarea>
-                    <button class="btn-primary" id="analyze-btn"> Grade My Extended Response</button>
+                    <div class="editor-header">
+                        <span class="section-label">Student Essay Draft</span>
+                        <span class="editor-tip">Double-weighted 12-point rubric grading</span>
+                    </div>
+                    <textarea id="essay-input" class="main-textarea" placeholder="Type or paste your extended response essay here..."></textarea>
+                    <button class="btn-primary" id="analyze-btn">
+                        <span>Grade My Extended Response</span>
+                        <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
                 </div>
 
-                <div id="results-view" class="results-container hidden">
-                    <h2>Analysis Results</h2>
+                <!-- Results View -->
+                <div id="results-view" class="results-container hidden scrollable">
+                    <div class="results-header">
+                        <h2>📊 Analysis Results</h2>
+                        <button class="btn-secondary" onclick="window.location.reload()">New Essay</button>
+                    </div>
+                    <!-- AI generated content inserts here dynamically -->
                 </div>
+
             </div>
 
         </section>
     </main>
-
 
     <script src="RLAmainpage.js"></script>
 </body>
