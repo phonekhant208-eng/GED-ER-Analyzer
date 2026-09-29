@@ -321,7 +321,7 @@ async function analyzeEssay() {
 // 12. Render Scorecard inside Full-Width Panel
 function renderResults(data) {
     resultsView.innerHTML = `
-        <h2 style="color: var(--rla-theme); margin-bottom: 1rem;">📊 Official GED Score Summary</h2>
+        <h2 style="color: var(--rla-theme); margin-bottom: 1rem;"> Official GED Score Summary</h2>
         <div style="font-size: 1.4rem; font-weight: 800; margin-bottom: 1.5rem; background: #f0ebf2; padding: 1rem; border-radius: 8px; text-align: center;">
             Total Cumulative Score: ${data.totalWeighted} / 12 Points (Raw: ${data.totalRaw}/6)
         </div>
@@ -338,7 +338,7 @@ function renderResults(data) {
             ${(data.improvementPlan || []).map(tip => `<li style="margin-bottom: 0.4rem;">${tip}</li>`).join('')}
         </ul>
         
-        <button id="reset-btn" class="btn-primary" style="margin-top: 2rem; background-color: #718096; width: 100%;">✏️ Edit Essay & Try Again</button>
+        <button id="reset-btn" class="btn-primary" style="margin-top: 2rem; background-color: #718096; width: 100%;"> Edit Essay & Try Again</button>
     `;
 
     resultsView.classList.remove('hidden');
