@@ -50,21 +50,16 @@ You MUST respond ONLY with a valid JSON object strictly adhering to this structu
   "sourcePassageAnalysis": "FIRST: If passages are present, summarize key claims, statistics, and flaws in Passage A and Passage B here. If passages are missing/blank, write 'No source passages provided; evaluating essay for structure and writing mechanics only.'",
   "trait1": { 
     "analysis": "Provide a 3-sentence deep evaluation of evidence synthesis here.",
-    "raw": 0, 
-    "weighted": 0 
+    "raw": 0
   },
   "trait2": { 
     "analysis": "Assess paragraph usage, flow, and structural transitions here.",
-    "raw": 0, 
-    "weighted": 0 
+    "raw": 0
   },
   "trait3": { 
     "analysis": "Highlight grammar, punctuation, or spelling patterns here.",
-    "raw": 0, 
-    "weighted": 0 
+    "raw": 0
   },
-  "totalRaw": 0,
-  "totalWeighted": 0,
   "improvementPlan": [
     "Actionable fragment 1",
     "Actionable fragment 2",
@@ -72,12 +67,7 @@ You MUST respond ONLY with a valid JSON object strictly adhering to this structu
   ]
 }`;
 
-
-
-
-
-
-const userPrompt = `
+  const userPrompt = `
 MODE: ${mode || 'Standard Grading'}
 PASSAGE A: ${passageA && passageA.trim() !== '' ? passageA : 'N/A (Grammar/Structure Evaluation Only)'}
 PASSAGE B: ${passageB && passageB.trim() !== '' ? passageB : 'N/A (Grammar/Structure Evaluation Only)'}
@@ -94,7 +84,7 @@ ${essayText}
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'openai/gpt-oss-120b',
+        model: 'llama-3.3-70b-versatile', // Valid active Groq model
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
@@ -110,11 +100,30 @@ ${essayText}
     }
 
     const data = await response.json();
-    const result = JSON.parse(data.choices[0].message.content);
+    let rawContent = data.choices[0].message.content.trim();
+
+    // Clean potential markdown wrapping
+    if (rawContent.startsWith('```')) {
+      rawContent = rawContent.replace(/^```json/i, '').replace(/^```/, '').replace(/```$/, '').trim();
+    }
+
+    const result = JSON.parse(rawContent);
+
+    // Explicitly compute double-weighted scores in JS for guaranteed accuracy
+    const t1Raw = Math.min(2, Math.max(0, parseInt(result.trait1?.raw || 0, 10)));
+    const t2Raw = Math.min(2, Math.max(0, parseInt(result.trait2?.raw || 0, 10)));
+    const t3Raw = Math.min(2, Math.max(0, parseInt(result.trait3?.raw || 0, 10)));
+
+    result.trait1 = { ...result.trait1, raw: t1Raw, weighted: t1Raw * 2 };
+    result.trait2 = { ...result.trait2, raw: t2Raw, weighted: t2Raw * 2 };
+    result.trait3 = { ...result.trait3, raw: t3Raw, weighted: t3Raw * 2 };
+
+    result.totalRaw = t1Raw + t2Raw + t3Raw;
+    result.totalWeighted = (t1Raw * 2) + (t2Raw * 2) + (t3Raw * 2);
 
     return res.status(200).json(result);
   } catch (error) {
     console.error('Serverless function error:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(500).json({ error: `Internal Server Error: ${error.message}` });
   }
 }
